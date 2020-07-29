@@ -1,7 +1,6 @@
 % % Seguimiento de pared
-function [angR]=SeguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
+function [angR]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
     d=0.5;%distancia
-    %ranges
     theta1=theta*180/pi;
     if seguimiento==1
     % Componentes del sensor 4, izquierdo atras
@@ -47,18 +46,18 @@ function [angR]=SeguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
     % Calculo del angulo
     thetag=atan2(Usp(1),Usp(2))-180;
     if ranges(1)<0.5 & isnan(d4)==0
-        angR=evitarObstaculos(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
         evitar=1;
     else
         angR=thetag;
         evitar=2;
     end
     if d2<0.5
-        angR=evitarObstaculos(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     end
     if d4<0.5
-        angR=evitarObstaculos(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     end
     else
@@ -66,7 +65,6 @@ function [angR]=SeguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
 
 % function [angR]=SeguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta)
     d=1;%distancia
-    ranges
     theta1=theta*180/pi;
     % Componentes del sensor 4, izquierdo atras
     ang4=sensorAngle_R(4);
@@ -111,7 +109,7 @@ function [angR]=SeguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
     % Calculo del angulo
     thetag=-atan2(Usp(1),Usp(2))+180;
     if ranges(1)<0.5 & isnan(ranges(1))==0
-        angR=evitarObstaculosI(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        angR=evitarObstaculosI(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     else
         angR=-theta+thetag;

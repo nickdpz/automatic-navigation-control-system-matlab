@@ -65,6 +65,30 @@ poses(:,1) = initialState';
 
 %set rate to iterate at
 r = rateControl(1/sampleTime);      % rateControl ejecuta el loop a una frecuencia fija
+R = 0.03;
+L = 0.15;
+T = 0.114/10;%Tiempo de levantamiento sobre 10
+Kp = 0.5;
+Ki = 0.01;
+Kd = 0.003;
+b0=(Kp*T+Ki*T^2+Kd)/T;
+b1=-(Kp*T+2*Kd)/T;
+b2=Kd/T;
+wdkm1 = 0;
+etkm1 = 0;
+etkm2 = 0;
+Kp = 0.08;
+Ki = 0.01;
+Kd = 0.003;
+c0=(Kp*T+Ki*T^2+Kd)/T;
+c1=-(Kp*T+2*Kd)/T;
+c2=Kd/T;
+% Variables para el controlador de velocidad lineal
+vdkm1 = 0.6;
+ddkm1 = 0.6;
+ddkm2 = 0.6; 
+idx=1;
+vD=1;
 xg=[];
 yg=[];
 for idx = 1:numel(t)
@@ -99,21 +123,23 @@ for idx = 1:numel(t)
         wP(idx) = 0;
     else
         rangesAux=mean(ranges);
-        theta_EO(idx) = evitarObstaculosP(rangesAux,sensorAngle_R,x,y,theta);
-        e_theta(idx) = wrapToPi(theta_EO(idx) - theta);
-        wP(idx) = 1*e_theta(idx);
+        theta_EO = evitarObstaculosP(rangesAux,sensorAngle_R,x,y,theta);
+        e_theta = wrapToPi(theta_EO - theta);
+        wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
+        wdkm1 = wP;
+        etkm2 = etkm1;
+        etkm1 = e_theta;
     end
-    
-    vP(idx) = 0.8;
-    
-    d_x(idx) = vP(idx)*cos(theta);
-    d_y(idx) = vP(idx)*sin(theta);
-    d_theta(idx) = wP(idx);
-    
-    x = x + dt*d_x(idx);
-    y = y + dt*d_y(idx);
-    theta = theta + dt*d_theta(idx);
-    
+    vP = abs(vdkm1+c0*(vD)+c1*ddkm1+c2*ddkm2);
+    vdkm1 = vP;
+    ddkm2 = ddkm1;
+    ddkm1 = vD;
+    d_x = vP*cosd(theta*180/pi);
+    d_y = vP*sind(theta*180/pi);
+    d_theta = wP;
+    x = x + dt*d_x;
+    y = y + dt*d_y;
+    theta = theta + dt*d_theta;
     poses(:,idx+1) = [x; y; theta];
     
 %     % Perform forward discrete integration step

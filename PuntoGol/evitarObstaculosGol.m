@@ -24,7 +24,11 @@ function [angR, vD]=evitarObstaculosGol(ranges,sensorAngle_R,x,y,theta,xd,yd)
        angG=atan2(dir_g(2),dir_g(1));
        %dir_o=dir_g+Pv;
        %angO=atan2(dir_o(2),dir_o(1))
-       angR=wrapToPi(angG+pi);
+       if(angG>pi/2)
+            angR=wrapToPi(angG+pi);
+       else
+            angR=wrapTo2Pi(angG+pi);
+       end
        vD=0.1;
     else
        angR=atan2(yd-y,xd-x);
