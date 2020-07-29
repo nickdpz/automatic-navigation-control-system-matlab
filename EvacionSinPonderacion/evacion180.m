@@ -8,7 +8,7 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [2  2  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [2  2  -90*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
 image = imread('../Images/mapa1.png');
@@ -99,7 +99,7 @@ for idx = 1:numel(t)
         wP(idx) = 0;
     else
         rangesAux=mean(ranges);
-        theta_EO(idx) = evitarObstaculos(rangesAux,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        theta_EO(idx) = evitarObstaculos(rangesAux,sensorAngle_R,x,y,theta);
         e_theta(idx) = wrapToPi(theta_EO(idx) - theta);
         wP(idx) = 1*e_theta(idx);
     end

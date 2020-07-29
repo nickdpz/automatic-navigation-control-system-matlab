@@ -8,7 +8,7 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [2  2  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [6  1  0*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
 image = imread('../Images/mapa1.png');
@@ -26,7 +26,7 @@ ax1 = refFigure.CurrentAxes;
 
 % definicion de los sensores
 sensor = rangeSensor;
-sensor.Range = [0.1,4.5];% Rango del Sensor (2cm a 450cm)
+sensor.Range = [0.02,2.5];% Rango del Sensor (2cm a 250cm)
 sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor
 
 % ubicacion de los sensores
@@ -57,7 +57,7 @@ sensorAngle_R = [   0    -45     45     -90      90]';
 % function exampleHelperDiffDriveCtrl(diffDrive,ppControl,initialState,goal,map1,map2,fig1,fig2,lidar)
 sampleTime = 0.05;             % Sample time [s]
 dt = sampleTime;
-t = 0:sampleTime:10;         % Time array
+t = 0:sampleTime:20;         % Time array
 poses = zeros(3,numel(t));    % Pose matrix
 poses(:,1) = initialState';
 % poses1(:,1) = initialState';
@@ -98,15 +98,16 @@ for idx = 1:numel(t)
     if isnan(ranges(1,:)) == [1  1  1  1  1]
         wP(idx) = 0;
     else
-        theta_EO(idx) = evitarObstaculos(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
+        rangesAux=mean(ranges);
+        theta_EO(idx) = evitarObstaculosP(rangesAux,sensorAngle_R,x,y,theta);
         e_theta(idx) = wrapToPi(theta_EO(idx) - theta);
         wP(idx) = 1*e_theta(idx);
     end
     
-    vP(idx) = 0.4;
+    vP(idx) = 0.8;
     
-    d_x(idx) = vP(idx)*cosd(theta*180/pi);
-    d_y(idx) = vP(idx)*sind(theta*180/pi);
+    d_x(idx) = vP(idx)*cos(theta);
+    d_y(idx) = vP(idx)*sin(theta);
     d_theta(idx) = wP(idx);
     
     x = x + dt*d_x(idx);
@@ -136,7 +137,7 @@ for idx = 1:numel(t)
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', 'groundvehicle.stl', 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
 
     % Wait to iterate at the proper rate
     waitfor(r);

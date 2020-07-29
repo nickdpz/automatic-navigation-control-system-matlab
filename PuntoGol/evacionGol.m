@@ -125,7 +125,8 @@ while dd>0.6
     if isnan(ranges(1,:)) == [1  1  1  1  1]
         wP = 0;
     else
-        [theta_EO,vD] = evitarObstaculosGol(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,xd,yd);
+        rangesAux=mean(ranges);
+        [theta_EO,vD] = evitarObstaculosGol(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
         e_theta = wrapToPi(theta_EO - theta);
         wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
         wdkm1 = wP;
@@ -168,8 +169,7 @@ while dd>0.6
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', 'groundvehicle.stl', 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
-
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
     % Wait to iterate at the proper rate
     waitfor(r);
     idx=idx+1;
