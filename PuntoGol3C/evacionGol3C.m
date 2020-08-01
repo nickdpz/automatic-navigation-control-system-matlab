@@ -9,8 +9,8 @@ kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
 xi=6.5;
 yi=6;
-xd=4;
-yd=4;
+xd=6;
+yd=1;
 initialState = [xi  yi  0*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa

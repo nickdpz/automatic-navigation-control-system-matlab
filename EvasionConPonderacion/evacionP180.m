@@ -163,7 +163,7 @@ for idx = 1:numel(t)
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
 
     % Wait to iterate at the proper rate
     waitfor(r);
