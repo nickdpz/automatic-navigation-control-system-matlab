@@ -31,7 +31,7 @@ sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor en grados
 
 % ubicacion de los sensores
 sensorx_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-sensory_R = 0.001*[ 178  128,5   128,5   20.5    20.5]';%Coordenadas en Y en mm
+sensory_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
 sensorAngle_R = [   0    -45     45     -90      90]';
 
 % %tspan = 0:0.05:1;

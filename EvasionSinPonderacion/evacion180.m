@@ -8,7 +8,7 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [6  1  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [9  9  90*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
 image = imread('../Images/mapa1.png');
@@ -31,7 +31,7 @@ sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor
 
 % ubicacion de los sensores
 sensorx_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-sensory_R = 0.001*[ 178  128,5   128,5   20.5    20.5]';%Coordenadas en Y en mm
+sensory_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
 sensorAngle_R = [   0    -45     45     -90      90]';
 
 % %tspan = 0:0.05:1;

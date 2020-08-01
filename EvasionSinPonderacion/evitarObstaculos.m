@@ -2,7 +2,7 @@
 
 function [angR]=evitarObstaculos(ranges,sensorAngle_R,x,y,theta)
     sensory_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-    sensorx_R = 0.001*[ 178  128,5   128,5   20.5    20.5]';
+    sensorx_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';
     rangesF=ranges(1,:);
     aux=find(isnan(rangesF));
     rangesF(aux)=4.5;
