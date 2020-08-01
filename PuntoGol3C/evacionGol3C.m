@@ -34,8 +34,8 @@ sensor.Range = [0.02,4.5];% Rango del Sensor (2cm a 450cm)
 sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor
 
 % ubicacion de los sensores
-sensorx_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-sensory_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
+sensory_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
+sensorx_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
 sensorAngle_R = [   0    -45     45     -90      90]';
 
 % %tspan = 0:0.05:1;
@@ -127,7 +127,7 @@ while dd>0.6
         wP = 0;
     else
         rangesAux=mean(ranges);
-        [theta_EO,vD] = evitarObstaculosGol3C(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
+        [theta_EO,vD] = evitarObstaculosGol3C(rangesAux,sensorAngle_R,x,y,theta,xd,yd,sensorx_R,sensory_R);
         e_theta = wrapToPi(theta_EO - theta);
         wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
         wdkm1 = wP;
@@ -170,7 +170,7 @@ while dd>0.6
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl', 'View', '2D', 'FrameSize', 1, 'Parent', ax1);
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
 
     % Wait to iterate at the proper rate
     waitfor(r);
