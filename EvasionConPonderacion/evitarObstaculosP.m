@@ -6,7 +6,7 @@ function [angR]=evitarObstaculosP(ranges,sensorAngle_R,x,y,theta)
     rangesF(aux)=4.5;
     ks=[0.6, 1.1, 1.1, 1.4, 1.4];
     rangesA=rangesF.*ks;
-    aux2=find(rangesA<0.4);
+    aux2=find(rangesA<0.45);
     if(~isempty(aux2))
         O_R=[0;0];
         for i=1:length(aux2)
@@ -24,7 +24,7 @@ function [angR]=evitarObstaculosP(ranges,sensorAngle_R,x,y,theta)
        angG=atan2(dir_g(2),dir_g(1));
        %dir_o=dir_g+Pv;
        %angO=atan2(dir_o(2),dir_o(1))
-       if(angG>pi/2)
+       if(angG>pi/3)
             angR=wrapToPi(angG+pi);
        else
             angR=wrapTo2Pi(angG+pi);
