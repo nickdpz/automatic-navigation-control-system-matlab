@@ -24,7 +24,7 @@ function [angR]=evitarObstaculos(ranges,sensorAngle_R,x,y,theta)
        angG=atan2(dir_g(2),dir_g(1));
        %dir_o=dir_g+Pv;
        %angO=atan2(dir_o(2),dir_o(1))
-       if(angG>2*pi/3)
+       if(angG>pi/2&&angG<3*pi/5)
            angR=pi;
        elseif(angG>pi/3&&angG<2*pi/3)
             angR=wrapToPi(angG+pi); 
