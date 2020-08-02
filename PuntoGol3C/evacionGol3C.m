@@ -94,7 +94,7 @@ yg=[];
 r = rateControl(1/sampleTime);      % rateControl ejecuta el loop a una frecuencia fija
 dd = abs(sqrt((xd-xi^2 + (yd-yi)^2)));
 cont=0;
-while dd>0.6
+while dd>0.3
     position = poses(:,idx)';
     currPose = position(1:2);
     

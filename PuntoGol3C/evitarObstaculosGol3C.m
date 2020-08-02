@@ -1,5 +1,5 @@
 function [angR,vD]=evitarObstaculosGol3C(ranges,sensorAngle_R,x,y,theta,xd,yd,sensorx_R,sensory_R)
-angGTG=wrapToPi(atan2(yd-y,xd-x));
+angGTG=atan2(yd-y,xd-x);
 rangesF=ranges(1,:);
 aux=find(isnan(rangesF));
 rangesF(aux)=4.5;
@@ -37,7 +37,7 @@ if(~isempty(aux2))
                 sin(theta) cos(theta)];
         dir_g=(Rthetav*O_R);
         angG=atan2(dir_g(2),dir_g(1));
-        alfa=0.6;
+        alfa=0.7;
         angA=alfa*angG+(1-alfa)*angGTG;
     end
     if(angA>pi/2)
@@ -47,7 +47,7 @@ if(~isempty(aux2))
        end
    vD=0.1;
 else
-   angR=angGTG;
+   angR=wrapToPi(angGTG);
    vD=1;
 end 
 end
