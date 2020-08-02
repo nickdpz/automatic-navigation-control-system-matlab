@@ -126,7 +126,7 @@ while dd>0.6
         wP = 0;
     else
         rangesAux=mean(ranges);
-        [theta_EO,vD] = evitarObstaculosGolP(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
+        [theta_EO,vD] = evitarObstaculosGol(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
         e_theta = wrapToPi(theta_EO - theta);
         wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
         wdkm1 = wP;
