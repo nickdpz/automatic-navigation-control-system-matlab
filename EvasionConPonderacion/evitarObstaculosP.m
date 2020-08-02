@@ -1,4 +1,4 @@
-function [angR]=evitarObstaculosP(ranges,sensorAngle_R,x,y,theta)
+function [angR,vD]=evitarObstaculosP(ranges,sensorAngle_R,x,y,theta)
     sensory_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
     sensorx_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';
     rangesF=ranges(1,:);
@@ -24,12 +24,16 @@ function [angR]=evitarObstaculosP(ranges,sensorAngle_R,x,y,theta)
        angG=atan2(dir_g(2),dir_g(1));
        %dir_o=dir_g+Pv;
        %angO=atan2(dir_o(2),dir_o(1))
-       if(angG>pi/3)
-            angR=wrapToPi(angG+pi);
+       if(angG>pi/2&&angG<3*pi/5)
+           angR=pi;
+       elseif(angG>pi/3&&angG<2*pi/3)
+            angR=wrapToPi(angG+pi); 
        else
             angR=wrapTo2Pi(angG+pi);
        end
+       vD=0.1;
     else
        angR=theta;
+       vD=1;
     end 
 end

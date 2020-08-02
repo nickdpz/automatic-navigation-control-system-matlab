@@ -4,7 +4,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
    ranges;
    vD=0.5;
     if seguimiento==1
-     ang4=sensorAngle_R(5);
+    ang4=sensorAngle_R(5);
        d4=ranges(5);
        if isnan(d4)==1
           d4=4.5; 
@@ -30,10 +30,10 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
        pared=P2-P1;
        paredn=pared/norm(pared);
        %pared_p=P1-((transpose(P1))*paredn)*paredn;
-       pared_p =-(P1-((transpose(P1))*paredn)*paredn);
+       pared_p = - (P1-((transpose(P1))*paredn)*paredn);
        pared_pn=pared_p/(norm(pared_p));
        seguir_pared_ad=d*paredn+(pared_p-d*pared_pn);
-       angT = (atan2(seguir_pared_ad(2),seguir_pared_ad(1))+theta);
+       angT = (atan2(seguir_pared_ad(2),seguir_pared_ad(1))-theta);
 %        Rang=[cos(theta) -sin(theta); sin(theta) cos(theta)];
 %        Ss=[x;y];
 %        Usp1=(Rang*seguir_pared_ad);
@@ -45,9 +45,20 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
        if isnan(d1)==1
            d1=4.5;
        end
-       if d1<0.5 || d2<0.2 || d4<0.2
-           angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
-           angT=theta-pi/2;
+       if d1<0.4 || d2<0.2 || d4<0.2
+           angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
+%            angT=(90*pi/180)+theta;
+           vD=0.2;
+       end
+       
+%        if d2>1.5 && d2<4.5
+%           angT=theta-pi;
+%           vD=0.2;
+%        end
+       
+       if d2>1 && d2<4.5
+          angT=(90*pi/180)+theta;
+          vD=0.1;
        end
 %        if d1<d || d2<d || d4<d
 %            angT=angR2;
@@ -112,7 +123,6 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
        if d2>1 && d2<4.5
           angT=-(90*pi/180)+theta;
           vD=0.1;
-          evitar=1
        end
 %        if d1<d || d2<d || d4<d
 %            angT=angR2;

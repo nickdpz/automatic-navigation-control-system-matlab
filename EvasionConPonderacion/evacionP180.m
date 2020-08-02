@@ -8,7 +8,7 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [2  2  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [8  1  0*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
 image = imread('../Images/mapa1.png');
@@ -123,23 +123,21 @@ for idx = 1:numel(t)
         wP(idx) = 0;
     else
         rangesAux=mean(ranges);
-        theta_EO = evitarObstaculosP(rangesAux,sensorAngle_R,x,y,theta);
+        [theta_EO,vD] = evitarObstaculosP(rangesAux,sensorAngle_R,x,y,theta);
         e_theta = wrapToPi(theta_EO - theta);
-        wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
-        wdkm1 = wP;
-        etkm2 = etkm1;
-        etkm1 = e_theta;
+        wP = 1*e_theta;
     end
-    vP = abs(vdkm1+c0*(vD)+c1*ddkm1+c2*ddkm2);
-    vdkm1 = vP;
-    ddkm2 = ddkm1;
-    ddkm1 = vD;
-    d_x = vP*cosd(theta*180/pi);
-    d_y = vP*sind(theta*180/pi);
+    
+    vP = 0.4;
+    
+    d_x = vP*cos(theta);
+    d_y = vP*sin(theta);
     d_theta = wP;
+    
     x = x + dt*d_x;
     y = y + dt*d_y;
     theta = theta + dt*d_theta;
+    
     poses(:,idx+1) = [x; y; theta];
     
 %     % Perform forward discrete integration step

@@ -9,7 +9,7 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [1  0.5  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [5.5  3  180*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
 image = imread('../Images/mapa5.png');
@@ -67,7 +67,7 @@ xg=[];
 yg=[];
 %set rate to iterate at
 r = rateControl(1/sampleTime);      % rateControl ejecuta el loop a una frecuencia fija
-seguimiento=2;% Para seguimiento por izquierda (1) en caso contrario seguimiento por derecha
+seguimiento=1;% Para seguimiento por izquierda (1) en caso contrario seguimiento por derecha
 for idx = 1:numel(t)
     position = poses(:,idx)';
     currPose = position(1:2);
