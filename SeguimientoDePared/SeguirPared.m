@@ -1,7 +1,6 @@
 % % Seguimiento de pared
 function [angR]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
     d=0.5;%distancia
-    theta1=theta*180/pi;
     if seguimiento==1
     % Componentes del sensor 4, izquierdo atras
     ang4=sensorAngle_R(5);
@@ -40,7 +39,7 @@ function [angR]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
      % Calculamos seguir pared
     seguir_pared_ad=d*paredn+(pared_p-d*pared_pn);
     % Calculamos el marco de referencia inercial
-    Rang=[cosd(theta) -sind(theta); sind(theta) cosd(theta)];
+    Rang=[cos(theta) -sin(theta); sin(theta) cos(theta)];
     Ss=[x;y];
     Usp=(Rang*seguir_pared_ad)+Ss;
     % Calculo del angulo
@@ -52,11 +51,11 @@ function [angR]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
         angR=thetag;
         evitar=2;
     end
-    if d2<0.5
+    if d2<0.3
         angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     end
-    if d4<0.5
+    if d4<0.3
         angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     end
@@ -103,24 +102,25 @@ function [angR]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
      % Calculamos seguir pared
     seguir_pared_ad=d*paredn+(pared_p-d*pared_pn);
     % Calculamos el marco de referencia inercial
-    Rang=[cosd(theta) -sind(theta); sind(theta) cosd(theta)];
+    Rang=[cos(theta) -sin(theta); sin(theta) cos(theta)];
     Ss=[x;y];
     Usp=(Rang*seguir_pared_ad)+Ss;
     % Calculo del angulo
-    thetag=-atan2(Usp(1),Usp(2))+180;
+    thetag=atan2(Usp(1),Usp(2))-pi;
     if ranges(1)<0.5 & isnan(ranges(1))==0
         angR=evitarObstaculosI(ranges,sensorAngle_R,x,y,theta);
         evitar=1
     else
-        angR=-theta+thetag;
+        angR=thetag;
         evitar=2
     end
-    if d2<0.8
+    if d2<0.5
         angR=evitarObstaculosI(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
         evitar=1
     end
-    if d4<0.8
+    if d4<0.5
         angR=evitarObstaculosI(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta);
         evitar=1
+    end
     end
 end

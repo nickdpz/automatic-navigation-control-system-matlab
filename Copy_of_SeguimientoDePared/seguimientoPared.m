@@ -1,20 +1,17 @@
+clear all
+close all
+clc
 
 % definimos el robot
-clear all;
 
 kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-xi=6.5;
-yi=6;
-xd=6;
-yd=1;
-initialState = [xi  yi  0*pi/180];   % pose => position in [m], and orientation [deg]
+initialState = [5.5 1 180*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
-image = imread('../Images/mapa1.png');
-
+image = imread('../Images/mapa5.png');
 
 grayimage = rgb2gray(image);
 bwimage = grayimage < 0.5;
@@ -29,12 +26,12 @@ ax1 = refFigure.CurrentAxes;
 
 % definicion de los sensores
 sensor = rangeSensor;
-sensor.Range = [0.1,4.5];% Rango del Sensor (2cm a 450cm)
-sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor
+sensor.Range = [0.02,4.5];% Rango del Sensor (2cm a 450cm)
+sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor en grados
 
 % ubicacion de los sensores
-sensorx_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-sensory_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
+sensory_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
+sensorx_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
 sensorAngle_R = [   0    -45     45     -90      90]';
 
 % %tspan = 0:0.05:1;
@@ -63,37 +60,14 @@ dt = sampleTime;
 t = 0:sampleTime:100;         % Time array
 poses = zeros(3,numel(t));    % Pose matrix
 poses(:,1) = initialState';
-R = 0.03;
-L = 0.15;
-T = 0.114/10;%Tiempo de levantamiento sobre 10
-Kp = 0.5;
-Ki = 0.01;
-Kd = 0.003;
-b0=(Kp*T+Ki*T^2+Kd)/T;
-b1=-(Kp*T+2*Kd)/T;
-b2=Kd/T;
-wdkm1 = 0;
-etkm1 = 0;
-etkm2 = 0;
-Kp = 0.08;
-Ki = 0.01;
-Kd = 0.003;
-c0=(Kp*T+Ki*T^2+Kd)/T;
-c1=-(Kp*T+2*Kd)/T;
-c2=Kd/T;
-% Variables para el controlador de velocidad lineal
-vdkm1 = 0.6;
-ddkm1 = 0.6;
-ddkm2 = 0.6; 
-idx=1;
-vD=1;
+% poses1(:,1) = initialState';
+% poses2(:,1) = initialState';
 xg=[];
 yg=[];
 %set rate to iterate at
 r = rateControl(1/sampleTime);      % rateControl ejecuta el loop a una frecuencia fija
-dd = abs(sqrt((xd-xi^2 + (yd-yi)^2)));
-cont=0;
-while dd>0.6
+seguimiento=1;% Para seguimiento por izquierda (1) en caso contrario seguimiento por derecha
+for idx = 1:numel(t)
     position = poses(:,idx)';
     currPose = position(1:2);
     
@@ -123,29 +97,24 @@ while dd>0.6
     end
     %ranges
     if isnan(ranges(1,:)) == [1  1  1  1  1]
-        wP = 0;
+        wP(idx) = 0;
     else
         rangesAux=mean(ranges);
-        [theta_EO,vD] = evitarObstaculosGolP(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
-        e_theta = wrapToPi(theta_EO - theta);
-        wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
-        wdkm1 = wP;
-        etkm2 = etkm1;
-        etkm1 = e_theta;
-        %wP = 1*e_theta;
+        theta_EO(idx) = seguirPared(rangesAux,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento);
+        e_theta(idx) = wrapToPi(theta_EO(idx) - theta);
+        wP(idx) = 1*e_theta(idx);
     end
-    %vP=0.5;
-    vP = abs(vdkm1+c0*(vD)+c1*ddkm1+c2*ddkm2);
-    vdkm1 = vP;
-    ddkm2 = ddkm1;
-    ddkm1 = vD;
-    d_x = vP*cosd(theta*180/pi);
-    d_y = vP*sind(theta*180/pi);
-    d_theta = wP;
-    x = x + dt*d_x;
-    y = y + dt*d_y;
-    theta = theta + dt*d_theta;
-    dd=sqrt((xd-x)^2+(yd-y)^2);
+%     pause(1);
+    vP(idx) = 0.5;
+    
+    d_x(idx) = vP(idx)*cosd(theta*180/pi);
+    d_y(idx) = vP(idx)*sind(theta*180/pi);
+    d_theta(idx) = wP(idx);
+    
+    x = x + dt*d_x(idx);
+    y = y + dt*d_y(idx);
+    theta = theta + dt*d_theta(idx);
+    
     poses(:,idx+1) = [x; y; theta];
     
 %     % Perform forward discrete integration step
@@ -170,12 +139,10 @@ while dd>0.6
 
     % Plot robot onto known map
     plotTransforms(plotTrvec', plotRot, 'MeshFilePath', '../Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
+
     % Wait to iterate at the proper rate
     waitfor(r);
-    idx=idx+1;
 end
- 
-dd=sqrt((xd-x)^2 + (yd-y)^2)
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);
