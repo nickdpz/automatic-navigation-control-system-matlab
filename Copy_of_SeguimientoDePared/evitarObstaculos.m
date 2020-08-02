@@ -10,7 +10,7 @@ function [angR]=evitarObstaculos(ranges,sensorAngle_R,x,y,theta)
     ys=sensory_R(i);
     d=ranges(i);
     if isnan(d)==1
-       d=4.6;
+       d=4.5;
        go=1;
     end    
     Rang=[cosd(ang) -sind(ang); sind(ang) cosd(ang)];
