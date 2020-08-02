@@ -101,12 +101,12 @@ for idx = 1:numel(t)
         wP(idx) = 0;
     else
         rangesAux=mean(ranges);
-        [theta_EO(idx)] = seguirPared(rangesAux,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento);
+        [theta_EO(idx),vP(idx)] = seguirPared(rangesAux,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento);
         e_theta(idx) = wrapToPi(theta_EO(idx) - theta);
         wP(idx) = 1*e_theta(idx);
     end
 %     pause(1);
-    vP(idx) = 0.5;
+%     vP(idx) = 0.5;
     
     d_x(idx) = vP(idx)*cosd(theta*180/pi);
     d_y(idx) = vP(idx)*sind(theta*180/pi);

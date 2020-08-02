@@ -1,7 +1,8 @@
 % % Seguimiento de pared
-function [angT]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
-   d=0.5;
-   ranges
+function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
+   d=0.3;
+   ranges;
+   vD=0.5;
     if seguimiento==1
      ang4=sensorAngle_R(5);
        d4=ranges(5);
@@ -39,15 +40,15 @@ function [angT]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
 %        angR1=atan2(Usp1(2),Usp1(1));
 %        Usp2=(Rang*seguir_pared_ad)+Ss;
 %        angR2=atan2(Usp2(2),Usp2(1));
-%        d1=ranges(1);
+       d1=ranges(1);
 %        angT=theta+angR2;
-%        if isnan(d1)==1
-%            d1=4.5;
-%        end
-%        if d1<0.5 || d2<d || d4<d
-%            angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
-%            angT=theta-angR;
-%        end
+       if isnan(d1)==1
+           d1=4.5;
+       end
+       if d1<0.5 || d2<0.2 || d4<0.2
+           angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
+           angT=theta-pi/2;
+       end
 %        if d1<d || d2<d || d4<d
 %            angT=angR2;
 %        else
@@ -97,9 +98,21 @@ function [angT]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
        if isnan(d1)==1
            d1=4.5;
        end
-       if d1<0.5 %|| d2<0.2 || d4<0.2
-           angR=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
-           angT=(90*pi/180)+theta;
+       if d1<0.4 %|| d2<0.2 || d4<0.2
+           angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
+%            angT=(90*pi/180)+theta;
+           vD=0.1;
+       end
+       
+%        if d2>1.5 && d2<4.5
+%           angT=theta-pi;
+%           vD=0.2;
+%        end
+       
+       if d2>1 && d2<4.5
+          angT=-(90*pi/180)+theta;
+          vD=0.1;
+          evitar=1
        end
 %        if d1<d || d2<d || d4<d
 %            angT=angR2;
@@ -108,6 +121,6 @@ function [angT]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,s
 %        end
        
     end
-    angT*180/pi
+    angT*180/pi;
 %     pause(1);
 end
