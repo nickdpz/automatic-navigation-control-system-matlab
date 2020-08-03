@@ -37,7 +37,7 @@ if(~isempty(aux2))
                 sin(theta) cos(theta)];
         dir_g=(Rthetav*O_R);
         dir_g=dir_g/norm(dir_g);
-        alfa=0.4;
+        alfa=0.3;
         %dd=abs(sqrt((xd-x)^2+(yd-y)^2));
         %[utgn_x,utgn_y]=pol2cart(angGTG,dd);
         utgn=[xd-x,xd-x];

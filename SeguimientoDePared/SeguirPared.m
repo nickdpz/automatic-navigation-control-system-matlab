@@ -1,9 +1,9 @@
 % % Seguimiento de pared
 function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
-   d=0.4;
+   d=0.5;
    ranges;
-   vD=0.5;
     if seguimiento==1
+        d=1;
     ang4=sensorAngle_R(5);
        d4=ranges(5);
        if isnan(d4)==1
@@ -42,6 +42,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %        angR2=atan2(Usp2(2),Usp2(1));
        d1=ranges(1);
 %        angT=theta+angR2;
+       vD=0.4;
        if isnan(d1)==1
            d1=4.5;
        end
@@ -55,18 +56,21 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %           angT=theta-pi;
 %           vD=0.2;
 %        end
-       prom=(d2+d4)/2;
-       
-       if prom>1 && d2<4.5 && d4<4.5
-          angT=(90*pi/180)+theta;
-          vD=0.1;
-       end
-%        if d1<d || d2<d || d4<d
-%            angT=angR2;
-%        else
-%            angT=angR1;
+%        prom=(d2+d4)/2;
+%        
+%        if prom>1 && d2<4.5 && d4<4.5
+%           angT=(90*pi/180)+theta;
+%           vD=0.1;
 %        end
-       
+        if d2>1 && d2<4.5 
+          angT=(50*pi/180)+theta;
+          vD=0.2;
+        end
+%        if d4>1 && d4<4.5 
+%           angT=(90*pi/180)+theta;
+%           vD=0.1;
+%        end
+
     else
        % Seguimiento por derecha
       ang4=sensorAngle_R(4);
@@ -106,6 +110,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %        Usp2=(Rang*seguir_pared_ad)+Ss;
 %        angR2=atan2(Usp2(2),Usp2(1));
        d1=ranges(1);
+       vD=0.5;
 %        angT=theta+angR2;
        if isnan(d1)==1
            d1=4.5;
@@ -116,15 +121,20 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
            vD=0.1;
        end
        
-%        if d2>1.5 && d2<4.5
-%           angT=theta-pi;
-%           vD=0.2;
-%        end
-       
-       if d4>1 && d4<4.5
-          angT=-(90*pi/180)+theta;
-          vD=0.1;
+       if d2>1 && d2<4.5
+          angT=theta-(50*pi/180);
+          vD=0.4;
        end
+%        prom=(d2+d4)/2;
+% %        
+%        if prom>1 && d2<4.5 && d4<4.5
+%           angT=-(90*pi/180)+theta;
+%           vD=0.1;
+%        end
+%        if d4>1 && d4<4.5
+%           angT=-(90*pi/180)+theta;
+%           vD=0.1;
+%        end
 %        if d1<d || d2<d || d4<d
 %            angT=angR2;
 %        else

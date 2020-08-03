@@ -1,7 +1,4 @@
-
-% definimos el robot
-clear all;
-
+time = tic;
 kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
@@ -174,8 +171,8 @@ while dd>0.3
     waitfor(r);
     idx=idx+1;
 end
- 
-dd=sqrt((xd-x)^2 + (yd-y)^2)
+disp("Tiempo : ");
+timevideo = toc(time)
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);

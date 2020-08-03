@@ -1,7 +1,6 @@
-clear all
 close all
 clc
-
+time = tic;
 % definimos el robot
 
 kinematicModel = differentialDriveKinematics;
@@ -166,7 +165,9 @@ for idx = 1:numel(t)
     % Wait to iterate at the proper rate
     waitfor(r);
 end
+timevideo = toc(time);
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);
+
 %end
