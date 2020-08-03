@@ -1,7 +1,8 @@
 
 % definimos el robot
 clear all;
-time = tic;
+clc;
+%time = tic;
 kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
@@ -29,12 +30,12 @@ ax1 = refFigure.CurrentAxes;
 
 % definicion de los sensores
 sensor = rangeSensor;
-sensor.Range = [0.1,4.5];% Rango del Sensor (2cm a 450cm)
+sensor.Range = [0.02,4.5];% Rango del Sensor (2cm a 450cm)
 sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor
 
 % ubicacion de los sensores
-sensorx_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
-sensory_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
+sensory_R = 0.001*[  0   -33.5   33.5    -41     41]'; %Coordenadas en X en mm
+sensorx_R = 0.001*[ 178  128.5   128.5   20.5    20.5]';%Coordenadas en Y en mm
 sensorAngle_R = [   0    -45     45     -90      90]';
 
 % %tspan = 0:0.05:1;
@@ -93,6 +94,9 @@ yg=[];
 r = rateControl(1/sampleTime);      % rateControl ejecuta el loop a una frecuencia fija
 dd = abs(sqrt((xd-xi^2 + (yd-yi)^2)));
 cont=0;
+figure(refFigure);
+hold on
+plot(ax1,xd,yd,'*','Linewidth',3);
 while dd>0.3
     position = poses(:,idx)';
     currPose = position(1:2);
@@ -126,7 +130,7 @@ while dd>0.3
         wP = 0;
     else
         rangesAux=mean(ranges);
-        [theta_EO,vD] = evitarObstaculosGolP(rangesAux,sensorAngle_R,x,y,theta,xd,yd);
+        [theta_EO,vD] = evitarObstaculosGol3C(rangesAux,sensorAngle_R,x,y,theta,xd,yd,sensorx_R,sensory_R);
         e_theta = wrapToPi(theta_EO - theta);
         wP = wdkm1+b0*e_theta+b1*etkm1+b2*etkm2;
         wdkm1 = wP;
@@ -145,7 +149,7 @@ while dd>0.3
     x = x + dt*d_x;
     y = y + dt*d_y;
     theta = theta + dt*d_theta;
-    dd=sqrt((xd-x)^2+(yd-y)^2);
+    dd=abs(sqrt((xd-x)^2+(yd-y)^2));
     poses(:,idx+1) = [x; y; theta];
     
 %     % Perform forward discrete integration step
@@ -170,12 +174,14 @@ while dd>0.3
 
     % Plot robot onto known map
     plotTransforms(plotTrvec', plotRot, 'MeshFilePath', './Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
+
     % Wait to iterate at the proper rate
     waitfor(r);
     idx=idx+1;
 end
 disp("Tiempo : ");
-toc(time)
+%timevideo = toc(time)
+idx*sampleTime
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);

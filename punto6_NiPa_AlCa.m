@@ -1,7 +1,7 @@
 close all
 clc
 
-time = tic;
+%time = tic;
 % definimos el robot
 
 kinematicModel = differentialDriveKinematics;
@@ -148,7 +148,8 @@ for idx = 1:numel(t)
 end
 
 disp("Tiempo : ");
-toc(time)
+%toc(time)
+idx*sampleTime
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);

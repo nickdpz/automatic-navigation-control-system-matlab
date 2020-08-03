@@ -177,7 +177,8 @@ while dd>0.3
     idx=idx+1;
 end
 disp("Tiempo : ");
-timevideo = toc(time)
+%timevideo = toc(time)
+idx*sampleTime
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);
