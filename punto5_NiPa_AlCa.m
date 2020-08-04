@@ -7,21 +7,25 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-xi=6.5;
-yi=6;
-xd=6;
-yd=1;
+
+%% Puntos Inciales y Destino
+
+xi=3;
+yi=1;
+xd=3;
+yd=3;
 initialState = [xi  yi  0*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
-image = imread('./Images/mapa1.png');
+load exampleMaps.mat
 
+% image = imread('./Images/image1.png');
 
-grayimage = rgb2gray(image);
-bwimage = grayimage < 0.5;
+% grayimage = rgb2gray(image);
+% bwimage = grayimage < 0.5;
 
 % convMap = binaryOccupancyMap(source,resolution);
-convMap = binaryOccupancyMap(bwimage,40);
+convMap = binaryOccupancyMap(simpleMap,5);
 refFigure = figure('Name','SimpleMap');
 show(convMap);
 
@@ -97,7 +101,7 @@ cont=0;
 figure(refFigure);
 hold on
 plot(ax1,xd,yd,'*','Linewidth',3);
-while dd>0.3
+while dd>0.1
     position = poses(:,idx)';
     currPose = position(1:2);
     
@@ -173,7 +177,7 @@ while dd>0.3
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', './Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', './Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.2, 'Parent', ax1);
 
     % Wait to iterate at the proper rate
     waitfor(r);

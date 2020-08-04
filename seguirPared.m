@@ -1,6 +1,6 @@
 % % Seguimiento de pared
 function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,theta,seguimiento)
-   d=0.5;
+   d=0.15;
    ranges;
     if seguimiento==1
         d=1;
@@ -46,7 +46,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
        if isnan(d1)==1
            d1=4.5;
        end
-       if d1<0.5 || d2<0.2 || d4<0.2
+       if d1<0.3 || d2<0.1 || d4<0.1
           % angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
            angT=-(90*pi/180)+theta;
            vD=0.2;
@@ -62,7 +62,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %           angT=(90*pi/180)+theta;
 %           vD=0.1;
 %        end
-        if d2>1 && d2<4.5 
+        if d2>0.5 && d2<4.5 
           angT=(50*pi/180)+theta;
           vD=0.2;
         end
@@ -110,20 +110,29 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %        Usp2=(Rang*seguir_pared_ad)+Ss;
 %        angR2=atan2(Usp2(2),Usp2(1));
        d1=ranges(1);
-       vD=0.5;
+       vD=0.3;
 %        angT=theta+angR2;
        if isnan(d1)==1
            d1=4.5;
        end
-       if d1<0.5 %|| d2<0.2 || d4<0.2
+       
+       if d2>0.4 && d2<4.5
+          angT=theta-(60*pi/180);
+          vD=0.1;
+       elseif d4>0.4 && d4<4.5
+          angT=theta-(110*pi/180);
+          vD=0.1;
+       end
+       
+       if  d2<d || d4<d
            %angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
            angT=(90*pi/180)+theta;
            vD=0.1;
        end
-       
-       if d2>1 && d2<4.5
-          angT=theta-(50*pi/180);
-          vD=0.4;
+       if d1<0.15 
+           angT=(90*pi/180)+theta;
+           vD=0.01;
+       end
        end
 %        prom=(d2+d4)/2;
 % %        
@@ -141,7 +150,7 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %            angT=angR1;
 %        end
        
-    end
+    
     angT*180/pi;
 %     pause(1);
 end

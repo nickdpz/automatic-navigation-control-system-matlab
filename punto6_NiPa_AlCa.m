@@ -8,16 +8,22 @@ kinematicModel = differentialDriveKinematics;
 kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
-initialState = [5.5  3  180*pi/180];   % pose => position in [m], and orientation [deg]
+
+%Laberinto 2
+% initialState = [6 0.1  90*pi/180];   % pose => position in [m], and orientation [deg]
+%Laberinto 1
+initialState = [4  3.8  180*pi/180];
+
+
 %Posicion inicial en (2,2)
 % mapa
-image = imread('./Images/mapa5.png');
-
+% image = imread('./Images/laberinto2n.png');
+image = imread('./Images/laberinto1n.png');
 grayimage = rgb2gray(image);
 bwimage = grayimage < 0.5;
 
 % convMap = binaryOccupancyMap(source,resolution);
-convMap = binaryOccupancyMap(bwimage,40);
+convMap = binaryOccupancyMap(bwimage,108);
 refFigure = figure('Name','SimpleMap');
 show(convMap);
 
@@ -26,7 +32,7 @@ ax1 = refFigure.CurrentAxes;
 
 % definicion de los sensores
 sensor = rangeSensor;
-sensor.Range = [0.02,4.5];% Rango del Sensor (2cm a 450cm)
+sensor.Range = [0.01,4.5];% Rango del Sensor (2cm a 450cm)
 sensor.HorizontalAngle = [-7.5  7.5]*pi/180; %Angulo del sensor en grados
 
 % ubicacion de los sensores
@@ -57,7 +63,7 @@ sensorAngle_R = [   0    -45     45     -90      90]';
 % function exampleHelperDiffDriveCtrl(diffDrive,ppControl,initialState,goal,map1,map2,fig1,fig2,lidar)
 sampleTime = 0.05;             % Sample time [s]
 dt = sampleTime;
-t = 0:sampleTime:100;         % Time array
+t = 0:sampleTime:100000;         % Time array
 poses = zeros(3,numel(t));    % Pose matrix
 poses(:,1) = initialState';
 % poses1(:,1) = initialState';
@@ -141,7 +147,7 @@ for idx = 1:numel(t)
     end
 
     % Plot robot onto known map
-    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', './Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.3, 'Parent', ax1);
+    plotTransforms(plotTrvec', plotRot, 'MeshFilePath', './Images/robotDiferential.stl','MeshColor',[0.0745 0.02314 0.431], 'View', '2D', 'FrameSize', 0.13, 'Parent', ax1);
 
     % Wait to iterate at the proper rate
     waitfor(r);

@@ -11,7 +11,7 @@ kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
 initialState = [5.5  3  180*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
-image = imread('../Images/mapa5.png');
+image = imread('../Images/laberinto1n.png');
 
 grayimage = rgb2gray(image);
 bwimage = grayimage < 0.5;
@@ -152,4 +152,5 @@ timevideo = toc(time)
 figure(refFigure);
 hold on
 plot(ax1,xg,yg,'Linewidth',3);
+Tiempo=idx*dT;
 %end
