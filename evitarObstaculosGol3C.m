@@ -5,10 +5,10 @@ aux=find(isnan(rangesF));
 rangesF(aux)=4.5;
 %ks=[0.6, 1.1, 1.1, 1.4, 1.4];
 %rangesA=rangesF.*ks;
-aux2=find(rangesF<0.5);
+aux2=find(rangesF<0.45);
 if(~isempty(aux2))
     O_R=[0;0];
-    aux3=find(rangesF<0.3);
+    aux3=find(rangesF<0.25);
     if(~isempty(aux3))
         for i=1:length(aux3)
             d=rangesF(1,aux3(i));

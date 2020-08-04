@@ -10,10 +10,10 @@ kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
 
 %% Puntos Inciales y Destino
 
-xi=3;
+xi=0.5;
 yi=1;
-xd=3;
-yd=3;
+xd=3.5;
+yd=2;
 initialState = [xi  yi  0*pi/180];   % pose => position in [m], and orientation [deg]
 %Posicion inicial en (2,2)
 % mapa
@@ -101,7 +101,7 @@ cont=0;
 figure(refFigure);
 hold on
 plot(ax1,xd,yd,'*','Linewidth',3);
-while dd>0.1
+while dd>0.3
     position = poses(:,idx)';
     currPose = position(1:2);
     
