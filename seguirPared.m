@@ -42,34 +42,37 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %        angR2=atan2(Usp2(2),Usp2(1));
        d1=ranges(1);
 %        angT=theta+angR2;
-       vD=0.4;
+       vD=0.3;
        if isnan(d1)==1
            d1=4.5;
        end
-       if d1<0.3 || d2<0.1 || d4<0.1
-          % angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
-           angT=-(90*pi/180)+theta;
-           vD=0.2;
+       
+       if d2>0.4 && d2<4.5
+          angT=theta+(100*pi/180);
+          vD=0.08;
+       elseif d4>0.35 && d4<4.5
+          angT=theta+(120*pi/180);
+          vD=0.08;
        end
        
-%        if d2>1.5 && d2<4.5
-%           angT=theta-pi;
-%           vD=0.2;
-%        end
-%        prom=(d2+d4)/2;
-%        
-%        if prom>1 && d2<4.5 && d4<4.5
-%           angT=(90*pi/180)+theta;
+       if d2<0.09 || d4<0.12
+          % angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
+           angT=-(90*pi/180)+theta;
+           vD=0.1;
+       end
+       
+       if d1<0.1 && d2<0.35
+          % angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
+           angT=-(80*pi/180)+theta;
+           vD=0.01;
+       end
+       
+       
+       
+%         if d2>0.5 && d2<4.5 
+%           angT=(50*pi/180)+theta;
 %           vD=0.1;
-%        end
-        if d2>0.5 && d2<4.5 
-          angT=(50*pi/180)+theta;
-          vD=0.2;
-        end
-%        if d4>1 && d4<4.5 
-%           angT=(90*pi/180)+theta;
-%           vD=0.1;
-%        end
+%         end
 
     else
        % Seguimiento por derecha
@@ -110,28 +113,28 @@ function [angT,vD]=seguirPared(ranges,sensorx_R,sensory_R,sensorAngle_R,x,y,thet
 %        Usp2=(Rang*seguir_pared_ad)+Ss;
 %        angR2=atan2(Usp2(2),Usp2(1));
        d1=ranges(1);
-       vD=0.3;
+       vD=0.4;
 %        angT=theta+angR2;
        if isnan(d1)==1
            d1=4.5;
        end
        
        if d2>0.4 && d2<4.5
-          angT=theta-(60*pi/180);
-          vD=0.1;
+          angT=theta-(90*pi/180);
+          vD=0.13;
        elseif d4>0.4 && d4<4.5
           angT=theta-(110*pi/180);
-          vD=0.1;
+          vD=0.12;
        end
        
-       if  d2<d || d4<d
+       if  d2<d-0.02 || d4<d-0.02
            %angT=evitarObstaculos(ranges,sensorAngle_R,x,y,theta);
-           angT=(90*pi/180)+theta;
-           vD=0.1;
+           angT=(100*pi/180)+theta;
+           vD=0.12;
        end
-       if d1<0.15 
-           angT=(90*pi/180)+theta;
-           vD=0.01;
+       if d1<0.13 
+           angT=(110*pi/180)+theta;
+           vD=0.03;
        end
        end
 %        prom=(d2+d4)/2;

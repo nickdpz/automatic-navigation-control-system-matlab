@@ -9,21 +9,25 @@ kinematicModel.WheelRadius = (65.65/2)*10^-3;% Diametro de 66.5mm
 kinematicModel.TrackWidth = 19.80*10^-3;%Ancho de la rueda de 19.80mm
 kinematicModel.WheelSpeedRange = [-10  10]*2*pi;
 
-%Laberinto 2
-% initialState = [6 0.1  90*pi/180];   % pose => position in [m], and orientation [deg]
-%Laberinto 1
-initialState = [4  3.8  180*pi/180];
-
+%Laberinto 2 Por derecha
+initialState = [4.8 0  90*pi/180]; % pose => position in [m], and orientation [deg]
+%Por izquierda
+% initialState = [4.4 0.3  180*pi/180];
+%Laberinto 1 Por derecha
+% initialState = [4  3.8  180*pi/180];
+% % Por izquierda
+% initialState = [4  3.8  180*pi/180];
 
 %Posicion inicial en (2,2)
 % mapa
-% image = imread('./Images/laberinto2n.png');
-image = imread('./Images/laberinto1n.png');
+image = imread('./Images/laberinto2n.png');
+% image = imread('./Images/laberinto1n.png');
 grayimage = rgb2gray(image);
 bwimage = grayimage < 0.5;
 
 % convMap = binaryOccupancyMap(source,resolution);
-convMap = binaryOccupancyMap(bwimage,108);
+% convMap = binaryOccupancyMap(bwimage,108); % Resolucion Laberinto 1
+convMap = binaryOccupancyMap(bwimage,100); % Resolucion Laberinto 2
 refFigure = figure('Name','SimpleMap');
 show(convMap);
 
@@ -63,7 +67,7 @@ sensorAngle_R = [   0    -45     45     -90      90]';
 % function exampleHelperDiffDriveCtrl(diffDrive,ppControl,initialState,goal,map1,map2,fig1,fig2,lidar)
 sampleTime = 0.05;             % Sample time [s]
 dt = sampleTime;
-t = 0:sampleTime:100000;         % Time array
+t = 0:sampleTime:10000;         % Time array
 poses = zeros(3,numel(t));    % Pose matrix
 poses(:,1) = initialState';
 % poses1(:,1) = initialState';
